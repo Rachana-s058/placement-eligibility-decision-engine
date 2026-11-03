@@ -1,19 +1,23 @@
+
 import java.util.Scanner;
+
 public class Main {
 
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        String name = sc.next();
-        double percentage = sc.nextDouble();
-        int backlogs = sc.nextInt();
-        int graduationYear = sc.nextInt();
+        String name = scanner.next();
+        double percentage = scanner.nextDouble();
+        int backlogs = scanner.nextInt();
+        int graduationYear = scanner.nextInt();
 
-        System.out.println("Candidate: " + name);
-        System.out.println("Percnetage: " + percentage);
-        System.out.println("Bacl=klogs: " + backlogs);
-        System.out.println("Graduation Year: " + graduationYear);
+        Candidate candidate = new Candidate(name, percentage, backlogs, graduationYear);
 
-        sc.close();
+        System.out.println("Candidate: " + candidate.getName());
+        System.out.println("Percentage: " + candidate.getPercentage());
+        System.out.println("Backlogs: " + candidate.getBacklogs());
+        System.out.println("Graduation Year: " + candidate.getGraduationYear());
+
+        scanner.close();
     }
 }
