@@ -6,69 +6,51 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        // Read user inputs
         String name = scanner.next();
         double percentage = scanner.nextDouble();
         int backlogs = scanner.nextInt();
         int graduationYear = scanner.nextInt();
 
-        Candidate candidate = new Candidate(
-                name,
-                percentage,
-                backlogs,
-                graduationYear
-        );
+        // Create objects
+        Candidate candidate = new Candidate(name, percentage, backlogs, graduationYear);
+        Job job = new Job("Infosys", "Java Developer", 65.0, 0, 2026);
 
-        Job job = new Job(
-                "Infosys",
-                "Java Developer",
-                65.0,
-                0,
-                2026
-        );
+        // Store all rules in an array for polymorphic iteration
+        EligibilityRule[] rules = {
+            new PercentageRule(),
+            new BacklogRule(),
+            new GraduationYearRule()
+        };
 
-        boolean percentagePass
-                = candidate.getPercentage() >= job.getMinimumPercentage();
+        boolean overallEligible = true;
 
-        boolean backlogPass
-                = candidate.getBacklogs() <= job.getMaximumBacklogs();
-
-        boolean yearPass
-                = candidate.getGraduationYear() == job.getRequiredGraduationYear();
-
-        boolean eligible
-                = percentagePass && backlogPass && yearPass;
-
+        // Print Report Header
         System.out.println("================================");
         System.out.println("PLACEMENT ELIGIBILITY RESULT");
         System.out.println("================================");
         System.out.println();
-
         System.out.println("Candidate : " + candidate.getName());
         System.out.println("Company   : " + job.getCompany());
         System.out.println("Role      : " + job.getRole());
         System.out.println();
 
-        if (percentagePass) {
-            System.out.println("Percentage      : PASS");
-        } else {
-            System.out.println("Percentage      : FAIL");
-        }
+        // Evaluate each rule dynamically
+        for (EligibilityRule rule : rules) {
+            boolean passed = rule.check(candidate, job);
 
-        if (backlogPass) {
-            System.out.println("Backlogs        : PASS");
-        } else {
-            System.out.println("Backlogs        : FAIL");
-        }
+            if (!passed) {
+                overallEligible = false;
+            }
 
-        if (yearPass) {
-            System.out.println("Graduation Year : PASS");
-        } else {
-            System.out.println("Graduation Year : FAIL");
+            String status = passed ? "PASS" : "FAIL";
+            System.out.printf("%-15s : %s\n", rule.getRuleName(), status);
         }
 
         System.out.println();
 
-        if (eligible) {
+        // Final verdict output
+        if (overallEligible) {
             System.out.println("Final Result : ELIGIBLE");
         } else {
             System.out.println("Final Result : NOT ELIGIBLE");
